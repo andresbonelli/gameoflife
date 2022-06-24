@@ -1,10 +1,8 @@
-import random
 from tkinter import *
 from time import sleep
-import threading
 
 #define board size
-ROWS = COLS = 20
+ROWS = COLS = 25
 
 #Create cells as a 2D list
 cells = []
@@ -68,13 +66,12 @@ def next_iteration():
             temp_columns.append(0)
 
     update_cells()
-    #print("antes: "+str(cells))
-    neighbours_list = []
+
+    #neighbours_list = []
     for row in range(ROWS):
         for col in range(COLS):
             get_neighbours(row,col)
-            neighbours_list.append(neighbours)
-
+            #neighbours_list.append(neighbours)
             if cells[row][col] == 1:
                 if neighbours < 2:
                     temp_cells[row][col] = 0
@@ -85,9 +82,8 @@ def next_iteration():
             else:
                 if neighbours == 3:
                     temp_cells[row][col] = 1
-
-    print(cells)
-    print(neighbours_list)
+    #print(cells)
+    #print(neighbours_list)
     #print(temp_cells)
     cells = temp_cells.copy()
     update_buttons()
