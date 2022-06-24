@@ -20,8 +20,6 @@ for row in range(ROWS):
     for col in range(COLS):
         temp_columns.append(0)
 
-
-
 def update_cells():
     global cells
 
@@ -68,6 +66,7 @@ def next_iteration():
     update_cells()
 
     #neighbours_list = []
+    
     for row in range(ROWS):
         for col in range(COLS):
             get_neighbours(row,col)
@@ -158,5 +157,3 @@ for row in range(ROWS):
         buttons[row][col].grid(row=row, column=col)
 
 root.mainloop()
-
-
