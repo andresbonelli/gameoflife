@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter.messagebox import *
 from tkinter import messagebox
 from time import sleep
-from multiprocessing import Process
+import threading
 from sys import exit
 import numpy as np
 import random
@@ -125,7 +125,7 @@ def random_buttons():
     update_buttons()
 
 def about():
-    showinfo("About Game of Life", "A tribute by @donpipon\nOriginal by John Conway\nhttps://playgameoflife.com\n\nCode available at:\nhttps://github.com/donpipon/gameoflife ")
+    showinfo("About Game of Life", "A tribute by Andres Bonelli\nOriginal by John Conway\nhttps://playgameoflife.com\n\nCode available at:\nhttps://github.com/andresbonelli/gameoflife ")
 
 def on_closing():
     global stop
@@ -135,7 +135,7 @@ def on_closing():
         exit()
 #Main window GUI
 root = Tk()
-root.title("Game of Life by @donpipon")
+root.title("Game of Life by @andresbonelli")
 
 title = Label(text="Game of Life", font=('Arial', 20))
 title.pack(side="top")
@@ -201,11 +201,13 @@ speed_dial.grid(row=0, column=1)
 if __name__ == '__main__':
 
     root.protocol("WM_DELETE_WINDOW", on_closing)
-    window = Process(target=root.mainloop()).start()
-    game = Process(target=initialize).start()
 
-    window.join()
-    game.join()
+    game_thread = threading.Thread(target=initialize)
+    game_thread.start()
+
+    root.mainloop()
+    
+    game_thread.join()
 
 
 
