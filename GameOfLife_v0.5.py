@@ -6,23 +6,27 @@ import random
 pygame.init()
 
 # CONSTANTS
-FPS = 60
+FPS = 30
 
-WIDTH, HEIGHT = 600, 400
-ROWS, COLS = 20, 30
+ROWS, COLS = 30, 60
 
-CELL_HEIGHT = HEIGHT // ROWS
-CELL_WIDTH = WIDTH // COLS
+CELL_WIDTH, CELL_HEIGHT = 20, 20
 
+WIDTH, HEIGHT = COLS * CELL_WIDTH, ROWS * CELL_HEIGHT
+
+# COLORS
 BLACK = (10, 10, 10)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 GRAY = (211, 211, 211)
+SILK = (187, 173, 160)
+ASH_GRAY = (205, 192, 180)
+BEAR_GRAY = (119, 110, 101)
 
-OUTLINE_COLOR = (187, 173, 160)
+OUTLINE_COLOR = SILK
 OUTLINE_THICKNESS = 2
-BACKGROUND_COLOR = (205, 192, 180)
-FONT_COLOR = (119, 110, 101)
+BACKGROUND_COLOR = ASH_GRAY
+FONT_COLOR = BEAR_GRAY
 
 FONT = pygame.font.SysFont("comicsans", 10, bold=True)
 
@@ -37,10 +41,10 @@ class Board:
         self.cells = np.zeros((self.rows, self.cols), dtype=np.int0)
 
     def toggle_cell(self, row, col):
-        self.cells[row][col] = 1 - self.cells[row][col]
+        self.cells[row][col] ^= 1  # bitwise swap 1 and 0
 
     def randomize(self):
-        self.cells = [[random.choice([0, 1]) for _ in range(self.cols)] for _ in range(self.rows)]
+        self.cells = [[random.choice([0, 0, 1]) for _ in range(self.cols)] for _ in range(self.rows)]
 
     def clear(self):
         self.cells = np.zeros((self.rows, self.cols), dtype=np.int0)
@@ -49,8 +53,10 @@ class Board:
         temp_cells = np.zeros((ROWS, COLS), dtype=np.int0)
         for row in range(self.rows):
             for col in range(self.cols):
-                neighbours = sum(self.cells[i][j] for i in range(max(0, row-1), min(self.rows, row+2))
-                                 for j in range(max(0, col-1), min(self.cols, col+2))) - self.cells[row][col]
+                neighbours = sum(self.cells[i][j]          # sum values of adjacent cells
+                                 for i in range(max(0, row - 1), min(self.rows, row + 2))
+                                 for j in range(max(0, col - 1), min(self.cols, col + 2))
+                                 ) - self.cells[row][col]  # cell can't be its own neighbour!
                 if self.cells[row][col] == 1 and (neighbours < 2 or neighbours > 3):
                     temp_cells[row][col] = 0
                 elif self.cells[row][col] == 0 and neighbours == 3:
@@ -59,17 +65,16 @@ class Board:
                     temp_cells[row][col] = self.cells[row][col]
         self.cells = temp_cells
 
-
-
 def draw_grid(window):
     for row in range(1, ROWS):
         y = row * CELL_HEIGHT
-        pygame.draw.line(window, OUTLINE_COLOR, (0,y), (WIDTH, y), OUTLINE_THICKNESS)
+        pygame.draw.line(window, OUTLINE_COLOR, (0, y), (WIDTH, y), OUTLINE_THICKNESS)
     for col in range(1, COLS):
         x = col * CELL_WIDTH
         pygame.draw.line(window, OUTLINE_COLOR, (x, 0), (x, HEIGHT), OUTLINE_THICKNESS)
 
     pygame.draw.rect(window, OUTLINE_COLOR, (0, 0, WIDTH, HEIGHT), OUTLINE_THICKNESS)
+
 
 def draw_cells(window, board):
     for row in range(ROWS):
@@ -87,7 +92,7 @@ def draw(window, board):
 # Main game loop
 def main(window):
     clock = pygame.time.Clock()
-    fps = 20
+    fps = FPS
     run = True
     run_game = False
 
@@ -125,6 +130,7 @@ def main(window):
         draw(window, board)
 
     pygame.quit()
+
 
 if __name__ == '__main__':
     main(WINDOW)
