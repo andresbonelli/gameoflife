@@ -114,7 +114,7 @@ def main(window):
                 if event.key == pygame.K_TAB or event.key == pygame.K_RIGHT:
                     board.next_iteration()
                 elif event.key == pygame.K_SPACE:
-                    run_game = False if run_game else True
+                    run_game = not run_game
                 elif event.key == pygame.K_r:
                     board.randomize()
                 elif event.key == pygame.K_c:
