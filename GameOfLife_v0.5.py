@@ -31,7 +31,7 @@ FONT_COLOR = BEAR_GRAY
 FONT = pygame.font.SysFont("comicsans", 10, bold=True)
 
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Game Of Life")
+pygame.display.set_caption("Game Of Life - (press <SPACE> to start, <C> to clear the board, <R> to fill random)")
 
 
 class Board:
